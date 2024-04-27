@@ -42,25 +42,23 @@ public class Account {
     }
 
     public void deposit(BigDecimal amount) {
-        this.balance.add(amount);
+        this.balance = this.balance.add(amount);
     }
 
     public void withdraw(BigDecimal amount)  throws BalanceToWithdrawException {
-        if (this.balance.compareTo(amount) >= 0){
-            this.balance.subtract(amount);
+        if (checkBalanceAuthorized(amount)){
+            this.balance = this.balance.subtract(amount);
         } else {
             throw new BalanceToWithdrawException("Transaction failed");
         }
-
     }
 
     public void transfer(BigDecimal amount, Account accountDest) throws BalanceToWithdrawException {
-        if (this.balance.compareTo(amount) >= 0){
-            this.withdraw(amount);
-            accountDest.deposit(amount);
-        } else {
-            throw new BalanceToWithdrawException("Transaction failed");
-        }
+        this.withdraw(amount);
+        accountDest.deposit(amount);
     }
 
+    private boolean checkBalanceAuthorized(BigDecimal amount) {
+        return this.balance.compareTo(amount) >= 0;
+    }
 }
