@@ -1,6 +1,6 @@
-package br.com.acmepay.Domain;
+package br.com.acmepay.application.domain.models;
 
-import br.com.acmepay.Exception.customerCreatedDuplicated;
+import br.com.acmepay.application.domain.exception.customerCreatedDuplicated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class CustomerDomain {
     private Long id;
     private String name;
     private String email;
@@ -23,9 +23,9 @@ public class Customer {
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
-    private List<Customer> customers = new ArrayList<>();
+    private List<CustomerDomain> customers = new ArrayList<>();
 
-    public Customer create(Customer customer) throws customerCreatedDuplicated {
+    public CustomerDomain create(CustomerDomain customer) throws customerCreatedDuplicated {
         if (validCustomerCreated(customer)) {
             throw new customerCreatedDuplicated("Already registered customer");
         }
@@ -42,14 +42,14 @@ public class Customer {
         return this;
     }
 
-    public List<Customer> listCustomer()  {
+    public List<CustomerDomain> listCustomer()  {
         return this.customers;
     }
 
-    public void delete(Customer customer) {
+    public void delete(CustomerDomain customer) {
     }
 
-    public void update(Customer customer) {
+    public void update(CustomerDomain customer) {
         this.name = customer.getName();
         this.email = customer.getEmail();
         this.phone = customer.getPhone();
@@ -57,11 +57,11 @@ public class Customer {
         customer.setUpdated_at(LocalDateTime.now());
     }
 
-    public Optional<Customer> getByCustomerDocument(String document) {
+    public Optional<CustomerDomain> getByCustomerDocument(String document) {
         return this.customers.stream().filter(c -> c.getDocument().equals(document)).findFirst();
     }
 
-    public Boolean validCustomerCreated (Customer customer) {
+    public Boolean validCustomerCreated (CustomerDomain customer) {
         return this.customers.stream()
                 .filter(c -> c.getEmail().equals(customer.email) && c.getDocument().equals(customer.document))
                 .anyMatch(customer1 -> true);

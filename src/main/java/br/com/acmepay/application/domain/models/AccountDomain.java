@@ -1,6 +1,6 @@
-package br.com.acmepay.Domain;
+package br.com.acmepay.application.domain.models;
 
-import br.com.acmepay.Exception.BalanceToWithdrawException;
+import br.com.acmepay.application.domain.exception.BalanceToWithdrawException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,20 +13,20 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+public class AccountDomain {
     private Long id;
     private Integer number;
     private Integer agency;
     private BigDecimal balance;
-    private Customer customer;
-    private List<Cards> cards;
+    private CustomerDomain customer;
+    private List<CardDomain> cards;
     private LocalDateTime created_at;
     private LocalDateTime update_at;
     private Boolean closed;
 
     private List<String> transactions = new ArrayList<>();
 
-    public Account create(Account  account) {
+    public AccountDomain create(AccountDomain account) {
         this.setId(1L);
         this.setNumber(null);
         this.setAgency(null);
@@ -55,12 +55,12 @@ public class Account {
         }
     }
 
-    public void transfer(BigDecimal amount, Account accountDest) throws BalanceToWithdrawException {
+    public void transfer(BigDecimal amount, AccountDomain accountDest) throws BalanceToWithdrawException {
         this.withdraw(amount);
         accountDest.deposit(amount);
     }
 
-    public List<String> accountStatement(Account accout) {
+    public List<String> accountStatement(AccountDomain accout) {
         return this.transactions;
     }
 
