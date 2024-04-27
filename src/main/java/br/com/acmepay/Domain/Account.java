@@ -24,30 +24,32 @@ public class Account {
     private LocalDateTime update_at;
     private Boolean closed;
 
-    private List<Account> createAcount = new ArrayList<>();
+    private List<String> transactions = new ArrayList<>();
 
-    public Account create(Account  accout) {
+    public Account create(Account  account) {
         this.setId(1L);
-        this.setNumber(accout.number);
-        this.setAgency(accout.agency);
+        this.setNumber(null);
+        this.setAgency(null);
         this.setBalance(BigDecimal.ZERO);
         this.setCards(new ArrayList<>());
         this.setCustomer(null);
         this.setCreated_at(LocalDateTime.now());
         this.setUpdate_at(null);
         this.setClosed(Boolean.FALSE);
-        this.createAcount.add(this);
+        this.transactions.add("Account created sucessfully" + LocalDateTime.now().toString());
 
-        return accout;
+        return account;
     }
 
     public void deposit(BigDecimal amount) {
         this.balance = this.balance.add(amount);
+        this.transactions.add("Deposit successful" + LocalDateTime.now() + " " + amount.toString() + "amount deposit from account");
     }
 
     public void withdraw(BigDecimal amount)  throws BalanceToWithdrawException {
         if (checkBalanceAuthorized(amount)){
             this.balance = this.balance.subtract(amount);
+            this.transactions.add("Withdraw successful" + LocalDateTime.now() + " " + amount.toString() + "amount withdrawn from account");
         } else {
             throw new BalanceToWithdrawException("Transaction failed");
         }
@@ -56,6 +58,10 @@ public class Account {
     public void transfer(BigDecimal amount, Account accountDest) throws BalanceToWithdrawException {
         this.withdraw(amount);
         accountDest.deposit(amount);
+    }
+
+    public List<String> accountStatement(Account accout) {
+        return this.transactions;
     }
 
     private boolean checkBalanceAuthorized(BigDecimal amount) {
